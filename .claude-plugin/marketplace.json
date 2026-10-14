@@ -1,0 +1,37 @@
+{
+  "name": "course-lab",
+  "owner": {
+    "name": "Akshay Joshi",
+    "url": "https://github.com/akshaypjoshi"
+  },
+  "metadata": {
+    "description": "Course Lab: Course Studio chapters with graded quizzes, evaluations and targeted retests."
+  },
+  "plugins": [
+    {
+      "name": "course-lab",
+      "source": "./",
+      "description": "Courses that test the learner: every chapter ends with a 10-question quiz that grades instantly, and Claude turns pasted results into a diagnosis and a targeted retest. Needs course-studio.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Akshay Joshi"
+      },
+      "license": "MIT",
+      "category": "education",
+      "keywords": ["course", "quiz", "mcq", "assessment", "education", "evaluation"]
+    },
+    {
+      "name": "course-studio",
+      "source": {
+        "source": "github",
+        "repo": "akshaypjoshi/course-studio"
+      },
+      "description": "Plan and write courses, chapters, notes and cheat sheets on any subject, with every diagram built as an interactive isometric figure. Course Lab builds on it.",
+      "author": {
+        "name": "Akshay Joshi"
+      },
+      "license": "MIT",
+      "category": "education"
+    }
+  ]
+}

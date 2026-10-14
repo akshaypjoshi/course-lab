@@ -1,0 +1,18 @@
+[
+  {"query": "write the binary search chapter for the DSA course, with a quiz at the end", "should_trigger": true},
+  {"query": "add a quiz to chapter 5 of my hashing course", "should_trigger": true},
+  {"query": "Make a short course on rate limiting, 4 chapters, with tests for each chapter", "should_trigger": true},
+  {"query": "write the final test for the System Design course in ./courses", "should_trigger": true},
+  {"query": "generate 10 MCQs (easy, medium, hard) for the consistent hashing chapter we just wrote", "should_trigger": true},
+  {"query": "course-lab results\nQuiz: Hashing, chapter test [dsa-05-hashing] · Data Structures & Algorithms\nScore: 4/10 · weighted 6/20 (30%) · level: Needs review\nDifficulty: easy 2/3, medium 2/4, hard 0/3\nAnswers:\nQ1 [easy · Load factor & resizing] picked C: correct (guessed)", "should_trigger": true},
+  {"query": "here are my quiz results from the chapter page, evaluate me and give me a retest", "should_trigger": true},
+  {"query": "test me on the event loop chapter of my JavaScript course", "should_trigger": true},
+  {"query": "a lesson on how the heart pumps blood for high-school students, with an assessment at the end", "should_trigger": true},
+  {"query": "Plan a System Design course, about 30 hours, for engineers preparing for senior interviews", "should_trigger": false},
+  {"query": "make me a cheat sheet for graph algorithms", "should_trigger": false},
+  {"query": "notes on consistent hashing with a figure", "should_trigger": false},
+  {"query": "write a 30-question timed mock exam on SQL joins for my students", "should_trigger": false},
+  {"query": "write unit tests for my quiz grading function in grade.ts", "should_trigger": false},
+  {"query": "set up an A/B test for the signup page", "should_trigger": false},
+  {"query": "build a Kahoot-style multiplayer quiz app in React", "should_trigger": false}
+]

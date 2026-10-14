@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Python deps and Chromium
+        run: |
+          pip install -r skills/course-lab/requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Validate manifests and frontmatter
+        run: |
+          python -m json.tool .claude-plugin/plugin.json > /dev/null
+          python -m json.tool .claude-plugin/marketplace.json > /dev/null
+          python -m json.tool evals/evals.json > /dev/null
+          python -m json.tool evals/trigger-evals.json > /dev/null
+          python -m json.tool skills/course-lab/examples/courses/dsa/chapters/05-hashing/quiz.json > /dev/null
+          python tools/check_no_em_dash.py
+          python - <<'PY'
+          import re, yaml
+          src = open("skills/course-lab/SKILL.md").read()
+          fm = yaml.safe_load(re.match(r"---\n(.*?)\n---\n", src, re.S).group(1))
+          assert fm["name"] == "course-lab", fm["name"]
+          assert len(fm["description"]) <= 1024, len(fm["description"])
+          print("SKILL.md frontmatter ok")
+          PY
+
+      - name: Smoke test (build the example with its quiz, take every quiz headless)
+        run: tests/smoke.sh
+
+      - name: Build the website (landing page + live demo)
+        run: python site/build.py "$RUNNER_TEMP/site"

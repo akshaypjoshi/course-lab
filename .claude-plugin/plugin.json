@@ -1,0 +1,22 @@
+{
+  "name": "course-lab",
+  "version": "0.1.0",
+  "description": "Courses that test the learner: every Course Studio chapter ends with a 10-question quiz (3 easy, 4 medium, 3 hard) that grades instantly by level, difficulty and topic, and Claude turns pasted results into a diagnosis and a targeted retest.",
+  "author": {
+    "name": "Akshay Joshi",
+    "url": "https://github.com/akshaypjoshi"
+  },
+  "homepage": "https://skills.akshayjoshi.dev/course-lab/",
+  "repository": "https://github.com/akshaypjoshi/course-lab",
+  "license": "MIT",
+  "keywords": [
+    "course",
+    "quiz",
+    "mcq",
+    "assessment",
+    "education",
+    "evaluation",
+    "retest",
+    "course-studio"
+  ]
+}

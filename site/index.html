@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Lab</title>
+<meta name="description" content="An agent skill that writes courses that test the learner: every chapter ends with a 10-question quiz that grades instantly, and Claude turns the results into a diagnosis and a targeted retest.">
+<link rel="canonical" href="https://skills.akshayjoshi.dev/course-lab/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Course Lab">
+<meta property="og:description" content="Course Studio chapters that end in a graded quiz, plus an evaluation and a targeted retest from your results. For Claude Code and other agents.">
+<meta property="og:url" content="https://skills.akshayjoshi.dev/course-lab/">
+<meta property="og:image" content="https://skills.akshayjoshi.dev/course-lab/assets/result-light.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #F0EBE3; --card: #F9F7F2; --ink: #1A1916; --ink-2: #4A4740; --ink-3: #8A857B;
+  --rule: #DDD6CA; --code-bg: #E9E3D9; --accent: #2F7D5B; --tint: #DCEBE2; --ok: #2E8B57;
+  --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 18px; color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #161512; --card: #1E1C18; --ink: #F1ECE3; --ink-2: #C4BDB0; --ink-3: #8C8577;
+    --rule: #34302A; --code-bg: #24211C; --accent: #4CC38A; --tint: #1A2E24; --ok: #4CC38A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #161512; --card: #1E1C18; --ink: #F1ECE3; --ink-2: #C4BDB0; --ink-3: #8C8577;
+  --rule: #34302A; --code-bg: #24211C; --accent: #4CC38A; --tint: #1A2E24; --ok: #4CC38A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16.5px/1.65 var(--font-body); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-underline-offset: 3px; }
+code, kbd { font: 500 .88em var(--font-mono); }
+p code, li code, td code { background: var(--code-bg); padding: 1px 5px; border-radius: 5px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+.eyebrow { font: 600 11px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+
+/* nav */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; }
+.crumb { font: 13px var(--font-mono); color: var(--ink-3); text-decoration: none; }
+.crumb a { color: var(--ink-3); text-decoration: none; } .crumb a:hover { color: var(--accent); }
+.crumb b { color: var(--ink); font-weight: 600; }
+.nav-links { display: flex; gap: 18px; font: 500 14px var(--font-body); }
+.nav-links a { color: var(--ink-2); text-decoration: none; } .nav-links a:hover { color: var(--accent); }
+
+/* hero */
+.hero { position: relative; overflow: hidden; background: var(--tint); border: 1px solid var(--rule); border-radius: var(--radius); padding: 40px 40px 36px; margin-top: 6px; }
+.hero h1 { font: 900 clamp(44px, 8vw, 88px)/.95 var(--font-display); letter-spacing: -.035em; margin: 14px 0 16px; position: relative; z-index: 1; }
+.hero .dek { font-size: clamp(17px, 2.1vw, 20px); color: var(--ink-2); max-width: 600px; margin: 0 0 26px; position: relative; z-index: 1; }
+.hero .glyph { position: absolute; right: -10px; bottom: -.18em; font: 900 clamp(150px, 24vw, 280px)/.8 var(--font-display); letter-spacing: -.06em; color: var(--accent); pointer-events: none; user-select: none; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; position: relative; z-index: 1; }
+.pill { font: 600 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; padding: 7px 10px; border-radius: 999px; background: var(--card); color: var(--ink); }
+.pill.dark { background: var(--ink); color: var(--paper); }
+.cta { display: flex; gap: 10px; flex-wrap: wrap; position: relative; z-index: 1; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 15px var(--font-body); padding: 11px 18px; border-radius: 999px; text-decoration: none; border: 1px solid var(--rule); background: var(--card); color: var(--ink); }
+.btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn:hover { transform: translateY(-1px); }
+.btn:focus-visible, .tab:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* install */
+.install { position: relative; z-index: 1; max-width: 640px; margin-bottom: 26px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.tab { font: 500 13px var(--font-mono); padding: 6px 12px; border-radius: 999px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--card); color: var(--ink); }
+.cmd { display: flex; align-items: flex-start; gap: 10px; background: var(--ink); color: var(--paper); border-radius: 14px; padding: 14px 14px 14px 18px; }
+.cmd pre { margin: 0; flex: 1; overflow-x: auto; font: 500 14px/1.7 var(--font-mono); white-space: pre; }
+.cmd pre .p { opacity: .45; user-select: none; }
+.copy { flex: none; font: 600 12px var(--font-mono); border: 1px solid rgba(255,255,255,.2); background: transparent; color: inherit; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cmd { background: #0C0B09; color: #F1ECE3; border: 1px solid var(--rule); } }
+:root[data-theme="dark"] .cmd { background: #0C0B09; color: #F1ECE3; border: 1px solid var(--rule); }
+
+/* sections */
+section { padding: 72px 0 0; }
+h2 { font: 800 clamp(28px, 4vw, 40px)/1.08 var(--font-display); letter-spacing: -.02em; margin: 10px 0 14px; }
+.lead { color: var(--ink-2); font-size: 18px; max-width: 680px; margin: 0 0 28px; }
+
+/* live figure */
+.figure-frame { background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius); padding: 8px; }
+.figure-frame iframe { display: block; width: 100%; height: min(820px, 80vh); border: 0; background: transparent; color-scheme: normal; }
+.figure-note { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 13px var(--font-mono); color: var(--ink-3); margin-top: 12px; }
+
+/* asks grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 20px 20px 18px; }
+.card .ask { font: 500 13px/1.5 var(--font-mono); color: var(--accent); margin: 0 0 10px; }
+.card h3 { font: 700 19px/1.25 var(--font-display); margin: 0 0 6px; }
+.card p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+/* steps */
+.steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; counter-reset: s; }
+.steps li { counter-increment: s; border-top: 2px solid var(--ink); padding-top: 14px; }
+.steps li::before { content: counter(s, decimal-leading-zero); font: 600 12px var(--font-mono); color: var(--accent); }
+.steps h3 { font: 700 19px/1.25 var(--font-display); margin: 6px 0 6px; }
+.steps p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+/* quality list */
+.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px 28px; padding: 0; margin: 0; list-style: none; }
+.checks li { position: relative; padding-left: 28px; color: var(--ink-2); }
+.checks li b { color: var(--ink); }
+.checks li::before { content: ""; position: absolute; left: 2px; top: .45em; width: 12px; height: 7px; border-left: 2px solid var(--ok); border-bottom: 2px solid var(--ok); transform: rotate(-45deg); }
+
+/* demos */
+.demos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+.demo-card { background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 14px 20px; display: flex; flex-direction: column; }
+.demo-card .shot img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--rule); }
+.demo-card .eyebrow { margin: 18px 6px 0; }
+.demo-card h3 { font: 800 24px/1.15 var(--font-display); letter-spacing: -.01em; margin: 6px 6px 8px; }
+.demo-card p { margin: 0 6px 18px; color: var(--ink-2); font-size: 15px; flex: 1; }
+.demo-card .cta { margin: 0 6px; }
+
+
+.grid.four { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.demo-card.wide { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; align-items: center; }
+.demo-card.wide .shot img { max-height: 380px; object-fit: cover; object-position: top; }
+@media (max-width: 760px) { .demo-card.wide { grid-template-columns: 1fr; } }
+
+/* screenshots */
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; align-items: start; }
+.shots figure { margin: 0; background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px; }
+.shots img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.shots figcaption { font: 13px var(--font-mono); color: var(--ink-3); margin: 10px 4px 2px; }
+pre.report { margin: 0; background: var(--code-bg); border-radius: 14px; padding: 16px 18px; overflow-x: auto; font: 500 13px/1.7 var(--font-mono); color: var(--ink-2); }
+
+/* requirements table */
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 4px 8px; }
+
+footer { margin: 88px 0 0; padding: 26px 0 40px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--ink-3); }
+footer a { color: var(--ink-2); }
+
+@media (max-width: 640px) {
+  .hero { padding: 26px 20px 24px; }
+  .hero .glyph { opacity: .18; }
+  .nav-links { gap: 12px; }
+  .nav-links .opt { display: none; }
+  section { padding-top: 56px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn:hover { transform: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav" aria-label="Site">
+    <div class="crumb"><a href="/">skills.akshayjoshi.dev</a> / <b>course-lab</b></div>
+    <div class="nav-links">
+      <a href="#how" class="opt">How it works</a>
+      <a href="#try">Try it</a>
+      <a href="https://github.com/akshaypjoshi/course-lab">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="pills"><span class="pill dark">Agent skill</span><span class="pill">Claude Code plugin</span><span class="pill">MIT</span></div>
+    <h1>Course Lab</h1>
+    <p class="dek">Courses that test the learner. Every chapter ends with a 10-question quiz that grades itself in the page, by level, difficulty and topic. Paste the results back and Claude names the misconceptions, says what to re-read, and builds a retest aimed at the weak spots.</p>
+
+    <div class="install">
+      <div class="tabs" role="tablist" aria-label="Install method">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="i-npx" id="t-npx">npx</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="i-plugin" id="t-plugin" tabindex="-1">/plugin</button>
+      </div>
+      <div class="cmd" role="tabpanel" id="i-npx" aria-labelledby="t-npx">
+        <pre><span class="p">$ </span>npx skills add akshaypjoshi/course-studio -g -a claude-code
+<span class="p">$ </span>npx skills add akshaypjoshi/course-lab -g -a claude-code</pre>
+        <button class="copy" data-copy="npx skills add akshaypjoshi/course-studio -g -a claude-code&#10;npx skills add akshaypjoshi/course-lab -g -a claude-code">Copy</button>
+      </div>
+      <div class="cmd" role="tabpanel" id="i-plugin" aria-labelledby="t-plugin" hidden>
+        <pre>/plugin marketplace add akshaypjoshi/course-lab
+/plugin install course-studio@course-lab
+/plugin install course-lab@course-lab</pre>
+        <button class="copy" data-copy="/plugin marketplace add akshaypjoshi/course-lab&#10;/plugin install course-studio@course-lab&#10;/plugin install course-lab@course-lab">Copy</button>
+      </div>
+    </div>
+
+    <div class="cta">
+      <a class="btn primary" href="#try">Take the demo quiz</a>
+      <a class="btn" href="https://github.com/akshaypjoshi/course-lab">View on GitHub</a>
+    </div>
+    <div class="glyph" aria-hidden="true">CL</div>
+  </header>
+
+  <section id="try" aria-labelledby="h-try">
+    <div class="eyebrow">Live quiz</div>
+    <h2 id="h-try">Take the Hashing chapter test</h2>
+    <p class="lead">This is the quiz from the end of Course Studio's demo chapter on hashing, running live. Answer the ten questions, tick <b>I'm guessing</b> when you are, and press Submit. You get a level, a breakdown by difficulty and topic, and a link to the section to re-read for every weak topic.</p>
+    <div class="figure-frame">
+      <iframe class="live-fig" title="Live quiz: Hashing, chapter test" data-light="example/dsa/try-hashing-quiz.html" data-dark="example/dsa/try-hashing-quiz.html" loading="lazy"></iframe>
+    </div>
+    <div class="figure-note"><span>Built by <code>lab.py</code> from one <code>quiz.json</code></span><a href="example/dsa/05-hashing.html#quiz">See it at the end of the chapter</a></div>
+  </section>
+
+  <section id="asks" aria-labelledby="h-asks">
+    <div class="eyebrow">What you ask for</div>
+    <h2 id="h-asks">Name the topic, get the test with it</h2>
+    <p class="lead">Course Studio writes the course; Course Lab adds the quizzes, the grading and the follow-up.</p>
+    <div class="grid four">
+      <div class="card"><p class="ask">"The binary search chapter, with a quiz"</p><h3>Chapter + quiz</h3><p>The full chapter with its figure, then 10 questions written from the finished text, verified, and added as its last section.</p></div>
+      <div class="card"><p class="ask">"A short course on rate limiting, with tests"</p><h3>A tested course</h3><p>A course plan, its chapters, a quiz for each, and a final test across them once two chapters are written.</p></div>
+      <div class="card"><p class="ask">"Add a quiz to chapter 5"</p><h3>Quiz for a chapter</h3><p>For a chapter that already exists. Every question links back to the section that teaches it.</p></div>
+      <div class="card"><p class="ask">"course-lab results ..."</p><h3>Evaluation + retest</h3><p>Paste the copied results. Misconceptions first, sections to re-read, concrete practice, and a new 10-question retest page.</p></div>
+    </div>
+  </section>
+
+  <section id="how" aria-labelledby="h-how">
+    <div class="eyebrow">How it works</div>
+    <h2 id="h-how">Learn, test, diagnose, retest</h2>
+    <p class="lead">The quiz tells the learner where they stand right away; the evaluation tells them why.</p>
+    <ol class="steps">
+      <li><h3>Write the chapter</h3><p>Course Studio writes and checks it: run code, an interactive figure, a built page.</p></li>
+      <li><h3>Write the quiz</h3><p>3 easy, 4 medium, 3 hard from the finished chapter. Every wrong option is a named mistake with a reason, and every answer is computed or run.</p></li>
+      <li><h3>Grade in the page</h3><p>Weighted score and level, by difficulty and by topic, confident mistakes apart from guesses, and a Revisit link for each weak topic.</p></li>
+      <li><h3>Paste back, retest</h3><p>Claude reads which wrong options were picked, names the misconception behind them, and builds a retest weighted to the weak topics.</p></li>
+    </ol>
+  </section>
+
+  <section id="results" aria-labelledby="h-results">
+    <div class="eyebrow">The result</div>
+    <h2 id="h-results">A grade that says what to do next</h2>
+    <p class="lead">Easy, medium and hard are worth 1, 2 and 3 points, so the level reflects depth. <b>Mastered</b> needs 85% and at least two of the three hard questions.</p>
+    <div class="shots">
+      <figure>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="assets/result-dark.png">
+          <img src="assets/result-light.png" width="1488" height="1724" alt="A graded attempt: 7/10, Developing, 60% weighted score, bars by difficulty, a by-topic breakdown with Revisit links, and what to do next." loading="lazy">
+        </picture>
+        <figcaption>The grade, right after Submit</figcaption>
+      </figure>
+      <figure>
+        <pre class="report">course-lab results
+Quiz: Hashing, chapter test [dsa-05-hashing] · Data Structures &amp; Algorithms
+Score: 4/10 · weighted 6/20 (30%) · level: Needs review
+Difficulty: easy 2/3, medium 2/4, hard 0/3
+Answers:
+Q1 [easy · Load factor &amp; resizing] picked C: correct (guessed)
+Q2 [easy · Hash functions] blank: wrong, answer B
+Q6 [medium · Pitfalls] picked A: wrong, answer B (was sure)
+...</pre>
+        <figcaption>Copy results for Claude: what you paste back for the evaluation</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="quality" aria-labelledby="h-quality">
+    <div class="eyebrow">Quality bar</div>
+    <h2 id="h-quality">Questions you can trust</h2>
+    <ul class="checks">
+      <li><b>Answerable from the chapter</b>, with exactly one right answer, verified by computing it, running it or tracing the chapter's own code.</li>
+      <li><b>A real mix</b>: easy is one step, hard is transfer to a case the chapter didn't show, not longer wording.</li>
+      <li><b>Distractors are mistakes</b>, each with a rationale, so the evaluation can say what the learner believes.</li>
+      <li><b>Validated</b>: the 3/4/3 mix, answer-position skew, topic spread and every section link are checked before building.</li>
+      <li><b>Taken headless</b>: all right, all wrong and a mixed attempt on desktop and on phone in dark mode, with grading, links, report and retake checked.</li>
+      <li><b>Self-contained pages</b> in Course Studio's style, light and dark, with the quiz inside the chapter.</li>
+    </ul>
+  </section>
+
+  <section id="demo" aria-labelledby="h-demo">
+    <div class="eyebrow">Demo</div>
+    <h2 id="h-demo">Read the chapter, then take its test</h2>
+    <p class="lead">Course Studio's Hashing chapter with Course Lab's quiz at the end, rebuilt by both skills' own scripts on every deploy.</p>
+    <div class="demos">
+      <article class="demo-card wide">
+        <a class="shot" href="example/dsa/05-hashing.html#quiz" aria-label="Open the Hashing chapter at its quiz">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="assets/quiz-dark.png">
+            <img src="assets/quiz-light.png" width="1488" height="1440" alt="The Test yourself section at the end of the Hashing chapter, with the first questions." loading="lazy">
+          </picture>
+        </a>
+        <div>
+        <div class="eyebrow">Data Structures &amp; Algorithms · Ch 5</div>
+        <h3>Hashing, with its chapter test</h3>
+        <p>Load factor, chaining, open addressing with tombstones, resizing and the inputs that break a hash map, then ten questions from a one-line load factor to a naive delete that breaks linear probing.</p>
+        <div class="cta"><a class="btn primary" href="example/dsa/05-hashing.html">Open the chapter</a><a class="btn" href="example/dsa/05-hashing.html#quiz">Jump to the quiz</a></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="install" aria-labelledby="h-install">
+    <div class="eyebrow">Requirements</div>
+    <h2 id="h-install">Two skills, a few local tools</h2>
+    <p class="lead">Course Lab writes the quizzes and uses Course Studio for everything else, so install both. It finds Course Studio by itself.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>Needed for</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../course-studio/">Course Studio</a></td><td>Planning, writing, figures and page builds</td></tr>
+          <tr><td>Python 3.9+ with <code>markdown</code>, <code>pyyaml</code>, <code>pygments</code></td><td>Building pages (<code>pip install -r requirements.txt</code> in the skill folder)</td></tr>
+          <tr><td><code>playwright</code> and Chromium</td><td>Taking every quiz headless in the check</td></tr>
+          <tr><td>Node.js 20.10+</td><td>Course Studio's figures</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>Course Lab, MIT. Built on <a href="../course-studio/">Course Studio</a>.</span>
+    <span><a href="https://github.com/akshaypjoshi/course-lab">GitHub</a> · <a href="https://github.com/akshaypjoshi/course-lab/blob/main/CHANGELOG.md">Changelog</a> · <a href="https://akshayjoshi.dev">akshayjoshi.dev</a></span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // install tabs
+  var tabs = [].slice.call(document.querySelectorAll('.tab'));
+  function select(t) {
+    tabs.forEach(function (x) {
+      var on = x === t;
+      x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]; select(n); n.focus();
+    });
+  });
+
+  // copy buttons
+  document.querySelectorAll('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.copy).then(done, function () {});
+    });
+  });
+
+  // live quiz: follow the colour scheme, size the frame to its content
+  var mq = matchMedia('(prefers-color-scheme: dark)');
+  function theme() { return document.documentElement.dataset.theme || (mq.matches ? 'dark' : 'light'); }
+  [].slice.call(document.querySelectorAll('.live-fig')).forEach(function (f) {
+    function size() {
+      /* the quiz is long: the frame keeps a fixed height and scrolls inside */
+    }
+    function load() {
+      var t = theme(), src = f.dataset[t];
+      f.style.colorScheme = t;  // must match the figure's root, or Chrome paints an opaque canvas behind it
+      if (f.getAttribute('src') !== src) f.src = src;
+    }
+    f.addEventListener('load', function () {
+      try {
+        var d = f.contentDocument, s = d.createElement('style');
+        s.textContent = 'html{color-scheme:' + theme() + '!important}html,body{background:transparent!important}';
+        d.head.appendChild(s);
+        new ResizeObserver(size).observe(d.body);
+      } catch (e) {}
+      size(); setTimeout(size, 400); setTimeout(size, 1500);
+    });
+    mq.addEventListener('change', load);
+    load();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{
+  "skill_name": "course-lab",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write chapter 4 (Binary Search) of the DSA course in ./courses, with a quiz.",
+      "expected_output": "Course Studio's chapter (chapter.md, figure, built page) written first, then courses/dsa/chapters/04-binary-search/quiz.json with 10 verified questions (3 easy, 4 medium, 3 hard), built with lab.py build and checked with check_lab.py --all.",
+      "files": [],
+      "expectations": [
+        "The chapter was written and built with course-studio before the quiz was started",
+        "quiz.json has exactly 3 easy, 4 medium and 3 hard questions, ordered easy to hard",
+        "Every question has topic, section, explanation, and a rationale for every wrong option",
+        "Questions span at least 3 topics and at least 4 different ## sections",
+        "Every numeric answer and code snippet was computed or run during the session",
+        "lab.py validate printed ok with no WARN lines",
+        "The page was built with lab.py build, not course-studio's build_course.py alone",
+        "check_lab.py --all reported 0 problems",
+        "No questions or answers were printed in chat"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "course-lab results\nQuiz: Hashing, chapter test [dsa-05-hashing] · Data Structures & Algorithms\nScore: 4/10 · weighted 6/20 (30%) · level: Needs review\nDifficulty: easy 2/3, medium 2/4, hard 0/3\nAnswers:\nQ1 [easy · Load factor & resizing] picked C: correct (guessed)\nQ2 [easy · Hash functions] blank: wrong, answer B\nQ3 [easy · Worst case] picked C: correct\nQ4 [medium · Open addressing] picked A: correct\nQ5 [medium · Load factor & resizing] picked B: wrong, answer D (was sure)\nQ6 [medium · Pitfalls] picked A: wrong, answer B (was sure)\nQ7 [medium · Chaining] picked B: correct\nQ8 [hard · Open addressing] picked B: wrong, answer D (was sure)\nQ9 [hard · Load factor & resizing] picked A: wrong, answer D\nQ10 [hard · Load factor & resizing] picked D: wrong, answer C (guessed)",
+      "expected_output": "A reply of about 250-300 words: verdict, misconceptions named from the picked options' rationales in examples/courses/dsa/chapters/05-hashing/quiz.json, sections to re-read, 1-3 concrete exercises, and a retest built with lab.py quiz as the last line.",
+      "files": ["skills/course-lab/examples/courses/dsa/chapters/05-hashing/quiz.json"],
+      "expectations": [
+        "The quiz source was found from the id and the picked options' rationales were read",
+        "Q5, Q6 and Q8 are treated as misconceptions (wrong and sure), Q2 and Q9 as gaps, Q1 as shaky",
+        "Each misconception names the wrong rule and the right one, with a re-read section",
+        "Practice exercises do not preview the retest's questions or numbers",
+        "A retest JSON with 10 new questions (3/4/3), at least 7 on weak topics, was written to retests/ and built with lab.py quiz",
+        "check_lab.py passed on the retest page",
+        "The reply does not reprint the quiz or every answer"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The DSA course in ./courses now has chapters 4 and 5 written. Write the final test.",
+      "expected_output": "courses/dsa/final-quiz.json with 10 questions (3/4/3), each with chapter and section, spread across both chapters, hard questions connecting them; built onto the course page with lab.py build.",
+      "files": [],
+      "expectations": [
+        "Every question has chapter and section",
+        "Both chapters are covered, split roughly by their length and importance (with two chapters, no more than 6 from one)",
+        "At least one hard question connects both chapters",
+        "The final test appears at the end of dist/index.html and check_lab.py passes"
+      ]
+    }
+  ]
+}

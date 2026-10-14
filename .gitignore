@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+# build output from running the examples
+**/dist/
+**/shots*/
+**/_anatomy/
