@@ -1,6 +1,6 @@
 ---
 name: course-lab
-description: Generate courses and chapters that test the learner: every chapter ends with a 10-question MCQ quiz (3 easy, 4 medium, 3 hard), the course gets a final test, the page grades instantly with a level and topic-wise breakdown, and Claude evaluates pasted results and builds targeted retests. Built on course-studio (writing) and Anatomy (figures). Use when the user asks to generate a course or chapter with questions, a quiz, a test or assessment, "test me on this chapter", or pastes course-lab results to be evaluated.
+description: Generate courses and chapters that test the learner. Every chapter ends with a 10-question MCQ quiz (3 easy, 4 medium, 3 hard), the course gets a final test, the page grades instantly with a level and topic-wise breakdown, and Claude evaluates pasted results and builds targeted retests. Built on course-studio (writing) and Anatomy (figures). Use when the user asks to generate a course or chapter with questions, a quiz, a test or assessment, "test me on this chapter", or pastes course-lab results to be evaluated.
 ---
 
 # Course Lab
